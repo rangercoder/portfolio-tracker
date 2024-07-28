@@ -7,22 +7,82 @@ import iifl from "./assets/iifl.svg"
 import kotak from "./assets/kotak.svg"
 import sharekhan from "./assets/sharekhan.svg"
 import upstox from "./assets/upstox.svg"
+import axios from 'axios'
 
 export default function App() {
   
   // Set the broker which user has selected
   const [activeBroker, setActiveBroker] = useState("zerodha")
 
-  // Table Data
-  const [tableData, setTableData] = useState([])
+  // Table Data - Initial dummy values
+  const [tableData, setTableData] = useState([
+    {
+      "id": 1,
+      "companyName": "Test Company",
+      "exchange": "NSE",
+      "buyingPrice": 100.0,
+      "quantity": 10,
+      "averagePrice": 100.0,
+      "currentPrice": 105.0,
+      "profitLoss": 50.0,
+      "dayChange": 5.0,
+      "dayChangePercent": 5.0
+    },
+  ])
 
+  // Runs on window load and broker change
   useEffect(() => {
+
+    console.log(activeBroker);
     
-    // Write API here
+    // API call to get table data
+    // ASSUMING THE API RESPONSE FORMAT TO BE ->
+    // response = [
+    //   {
+    //     "id": "1",
+    //     "companyName": "Test Company",
+    //     "exchange": "NSE",
+    //     "buyingPrice": 100.0,
+    //     "quantity": 10,
+    //     "averagePrice": 100.0,
+    //     "currentPrice": 105.0,
+    //     "profitLoss": 50.0,
+    //     "dayChange": 5.0,
+    //     "dayChangePercent": 5.0
+    //   },
+
+    //   {
+    //     "id": "2",
+    //     "companyName": "Test Company 2",
+    //     "exchange": "BSE",
+    //     "buyingPrice": 100.0,
+    //     "quantity": 10,
+    //     "averagePrice": 100.0,
+    //     "currentPrice": 105.0,
+    //     "profitLoss": 50.0,
+    //     "dayChange": 5.0,
+    //     "dayChangePercent": 5.0
+    //   }
+
+    //   etc.....
+    // ]
+    
+    axios.get(`http://localhost:8080/api/${activeBroker}/portfolios`)
+    .then((res)=>{
+
+      console.log(res.data);
+      setTableData(res.data)
+
+    })
+    .catch((err)=>{
+
+      console.log(err)
+
+    })
 
   
     return () => {}
-  }, [])
+  }, [activeBroker])
   
 
 
@@ -66,7 +126,7 @@ export default function App() {
           <BrokerButton setActiveBroker={setActiveBroker} activeBroker={activeBroker} name={'upstox'} img={upstox}/>
           <BrokerButton setActiveBroker={setActiveBroker} activeBroker={activeBroker} name={'sharekhan'} img={sharekhan}/>
           <BrokerButton setActiveBroker={setActiveBroker} activeBroker={activeBroker} name={'kotak'} img={kotak}/>
-          <BrokerButton setActiveBroker={setActiveBroker} activeBroker={activeBroker} name={'IIFL'} img={iifl}/>
+          <BrokerButton setActiveBroker={setActiveBroker} activeBroker={activeBroker} name={'iifl'} img={iifl}/>
           
         </div>
 
@@ -142,62 +202,67 @@ export default function App() {
           
           {/* Body rows */}
           {/* Use a map to return all rows */}
-          <div className='flex items-center gap-1 p-2 h-[3rem] bg-white shadow-sm rounded-md'>
+          {
+            tableData.map((item)=>{
+              return(
+                <div key={item.id} className='flex items-center gap-1 p-2 h-[3rem] bg-white shadow-sm rounded-md'>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              Asian Paints
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.companyName}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              NSE
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.exchange}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              2980
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.buyingPrice}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              1
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.quantity}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              2980
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.averagePrice}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              2948
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.currentPrice}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              -32
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.profitLoss}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              4
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.dayChange}
+                  </div>
 
-            <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
+                  <div className='h-full w-[0.7px] bg-[#b8b8b8]'/>
 
-            <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
-              0.2%
-            </div>
+                  <div className='text-[0.85rem] text-ellipsis text-nowrap overflow-hidden text-center w-[11.11%]'>
+                    {item.dayChangePercent}%
+                  </div>
 
-          </div>
-
+                </div>
+              )
+            })
+          }
         </div>
 
       </div>
