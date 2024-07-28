@@ -97,7 +97,7 @@ export default function App() {
         {/* Name */}
         <div className=' flex flex-col text-[#777]'>
           <div>Welcome Back</div>
-          <div className='text-4xl font-bold'>Pokemon Trainer</div>
+          <div className='text-4xl font-bold'>Pushker Prakash</div>
         </div>
 
         {/* Cost */}
